@@ -25,13 +25,34 @@ router.patch('/saque', async (req, res) => {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.get('/consultarSaldo', (req, res) => { });
-router.delete('/:agência/:conta', (req, res) => { });
-router.put('/trasnferencia', (req, res) => { });
-router.get('/mediaSaldo/:agencia', (req, res) => { });
-router.get('/menorSaldo/:numClientes', (req, res) => { });
-router.get('/maiorSaldo/:numClientes', (req, res) => { });
-router.put('/agenciaPrivate', (req, res) => { });
+router.get('/saldo/:agencia/:conta', async (req, res) => {
+    let { agencia, conta } = req.params;
+    try {
+        res.send(await consultarSaldo(agencia, conta))
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+});
+router.delete('/:agencia/:conta', async (req, res) => {
+    let { agencia, conta } = req.params;
+    try {
+        res.send(await deleteAccount(agencia, conta))
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+});
+router.put('/trasnferencia', async (req, res) => { });
+router.get('/mediaSaldo/:agencia', async (req, res) => { 
+    let { agencia } = req.params;
+    try {
+        res.send(await mediaSaldo(agencia))
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+});
+router.get('/menorSaldo/:numClientes', async (req, res) => { });
+router.get('/maiorSaldo/:numClientes', async (req, res) => { });
+router.put('/agenciaPrivate', async (req, res) => { });
 
 
 
