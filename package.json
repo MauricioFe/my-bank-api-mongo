@@ -19,7 +19,7 @@
   "homepage": "https://github.com/MauricioFe/my-bank-api-mongo#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.10.2",
-    "type":"module"
-  }
+    "mongoose": "^5.10.2"
+  },
+  "type":"module"
 }
