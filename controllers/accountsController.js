@@ -21,16 +21,16 @@ async function deposito(account) {
 }
 
 async function saque(account) {
-    const accountAtual = getByAccontAndAgency(account.agencia, account.conta)
+    const accountAtual = await getByAccontAndAgency(account.agencia, account.conta)
     if (account.valor < accountAtual.balance) {
-        const saque = await accountsModel.findOneAndUpdate({ agencia: account.agencia, conta: account.conta }, { $inc: { balance: (account.valor * -1) - 1 } }, { new: true });
+        const saque = await accountsModel.findOneAndUpdate({ agencia: account.agencia, conta: account.conta }, { $inc: { balance: (-account.valor) - 1 } }, { new: true });
         return saque;
     }
     return "Saldo insuficiente"
 }
 
 async function consultarSaldo(agencia, conta) {
-    const accountAtual = getByAccontAndAgency(agencia, conta)
+    const accountAtual = await getByAccontAndAgency(agencia, conta)
     if (accountAtual) {
         const saldo = await accountsModel.findOne({ agencia: agencia, conta: conta }, { balance: 1 })
         return saldo;
@@ -39,7 +39,7 @@ async function consultarSaldo(agencia, conta) {
 }
 
 async function deleteAccount(agencia, conta) {
-    const accountAtual = getByAccontAndAgency(agencia, conta)
+    const accountAtual = await getByAccontAndAgency(agencia, conta)
     if (accountAtual) {
         const account = await accountsModel.findOneAndDelete({ agencia: agencia, conta: conta });
         const count = await accountsModel.countDocuments({ agencia: agencia });
@@ -53,14 +53,14 @@ async function transferencia(origin, destiny, value) {
     const agencyDestiny = await accountsModel.find({ conta: destiny });
     const bacon = []
     if (agencyDestiny[0].agencia === agencyOrigin[0].agencia) {
-        const credito = await accountsModel.findOneAndUpdate({ _id: agencyOrigin[0]._id }, { $inc: { balance: -value } });
-        const debito = await accountsModel.findOneAndUpdate({ _id: agencyDestiny[0]._id }, { $inc: { balance: value } });
+        const credito = await accountsModel.findOneAndUpdate({ _id: agencyOrigin[0]._id }, { $inc: { balance: -value } }, { new: true });
+        const debito = await accountsModel.findOneAndUpdate({ _id: agencyDestiny[0]._id }, { $inc: { balance: value } }, { new: true });
         bacon.push(credito);
         bacon.push(debito);
         return bacon;
     }
-    const credito = await accountsModel.findOneAndUpdate({ _id: agencyOrigin[0]._id }, { $inc: { balance: (-value - 8) } });
-    const debito = await accountsModel.findOneAndUpdate({ _id: agencyDestiny[0]._id }, { $inc: { balance: value } });
+    const credito = await accountsModel.findOneAndUpdate({ _id: agencyOrigin[0]._id }, { $inc: { balance: (-value - 8) } }, { new: true });
+    const debito = await accountsModel.findOneAndUpdate({ _id: agencyDestiny[0]._id }, { $inc: { balance: value } }, { new: true });
     bacon.push(credito);
     bacon.push(debito);
     return bacon;
