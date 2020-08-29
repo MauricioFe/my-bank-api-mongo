@@ -1,0 +1,25 @@
+{
+  "name": "my-bank-api-mongo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MauricioFe/my-bank-api-mongo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MauricioFe/my-bank-api-mongo/issues"
+  },
+  "homepage": "https://github.com/MauricioFe/my-bank-api-mongo#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.2",
+    "type":"module"
+  }
+}
