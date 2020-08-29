@@ -14,11 +14,11 @@ app.listen(3000, async () => {
         console.log(error)
     }
 });
-
-async () => {
-    await mongoose.connect('mongodb+srv://Mauricio:7468@bootcamp.ijmxh.mongodb.net/Mybank?retryWrites=true&w=majority', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
-    console.log("Conectado ao banco atlas");
-}
+mongoose.connect('mongodb+srv://Mauricio:7468@bootcamp.ijmxh.mongodb.net/MyBank?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(
+    console.log("Conectado ao banco Atlas")
+).catch(err => {
+    console.log("Erro ao conectar ao banco de dados ", err);
+});
