@@ -1,0 +1,9 @@
+async function deposito(account) { }
+async function saque(account) { }
+async function consultarSaldo(account) { }
+async function deleteAccount(agencia,conta) { }
+async function transferencia(account) { }
+async function mediaSaldo(agencia) { }
+async function menorSaldo(numClientes) { }
+async function maiorSaldo(numClientes) { }
+async function agenciaPrivate(account) { }
