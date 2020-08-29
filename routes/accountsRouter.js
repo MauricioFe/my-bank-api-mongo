@@ -41,8 +41,18 @@ router.delete('/:agencia/:conta', async (req, res) => {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.put('/trasnferencia', async (req, res) => { });
-router.get('/mediaSaldo/:agencia', async (req, res) => { 
+
+router.patch('/trasnferencia/:origin/:destiny/:value', async (req, res) => {
+    const { origin, destiny, value } = req.params
+    try {
+        res.send(await transferencia(origin, destiny, value));
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+
+});
+
+router.get('/mediaSaldo/:agencia', async (req, res) => {
     let { agencia } = req.params;
     try {
         res.send(await mediaSaldo(agencia))
@@ -50,23 +60,29 @@ router.get('/mediaSaldo/:agencia', async (req, res) => {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.get('/menorSaldo/:numClientes', async (req, res) => { 
-    let {numClientes} = req.params;
+router.get('/menorSaldo/:numClientes', async (req, res) => {
+    let { numClientes } = req.params;
     try {
         res.send(await menorSaldo(numClientes))
     } catch (error) {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.get('/maiorSaldo/:numClientes', async (req, res) => { 
-    let {numClientes} = req.params;
+router.get('/maiorSaldo/:numClientes', async (req, res) => {
+    let { numClientes } = req.params;
     try {
         res.send(await maiorSaldo(numClientes))
     } catch (error) {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.put('/agenciaPrivate', async (req, res) => { });
+router.patch('/agenciaPrivate', async (req, res) => {
+    try {
+        res.send(await agenciaPrivate())
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+});
 
 
 

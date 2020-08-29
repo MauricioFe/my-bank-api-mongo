@@ -1,7 +1,7 @@
 import { accountsModel } from '../models/accounts.js'
 
 async function getAll() {
-    const account = await accountsModel.find({}).limit(30);
+    const account = await accountsModel.find({});
     return account;
 }
 
@@ -9,6 +9,7 @@ async function getByAccontAndAgency(agencia, conta) {
     const account = await accountsModel.findOne({ agencia: agencia, conta: conta });
     return account;
 }
+
 async function deposito(account) {
 
     console.log()
@@ -18,6 +19,7 @@ async function deposito(account) {
     }
     return "O valor de depósito deve ser maior que 0"
 }
+
 async function saque(account) {
     const accountAtual = getByAccontAndAgency(account.agencia, account.conta)
     if (account.valor < accountAtual.balance) {
@@ -26,6 +28,7 @@ async function saque(account) {
     }
     return "Saldo insuficiente"
 }
+
 async function consultarSaldo(agencia, conta) {
     const accountAtual = getByAccontAndAgency(agencia, conta)
     if (accountAtual) {
@@ -34,6 +37,7 @@ async function consultarSaldo(agencia, conta) {
     }
     return "Conta não existente"
 }
+
 async function deleteAccount(agencia, conta) {
     const accountAtual = getByAccontAndAgency(agencia, conta)
     if (accountAtual) {
@@ -43,27 +47,70 @@ async function deleteAccount(agencia, conta) {
     }
     return "Conta não existente"
 }
-async function transferencia(account) { }
+
+async function transferencia(origin, destiny, value) {
+    const agencyOrigin = await accountsModel.find({ conta: origin });
+    const agencyDestiny = await accountsModel.find({ conta: destiny });
+    const bacon = []
+    if (agencyDestiny[0].agencia === agencyOrigin[0].agencia) {
+        const credito = await accountsModel.findOneAndUpdate({ _id: agencyOrigin[0]._id }, { $inc: { balance: -value } });
+        const debito = await accountsModel.findOneAndUpdate({ _id: agencyDestiny[0]._id }, { $inc: { balance: value } });
+        bacon.push(credito);
+        bacon.push(debito);
+        return bacon;
+    }
+    const credito = await accountsModel.findOneAndUpdate({ _id: agencyOrigin[0]._id }, { $inc: { balance: (-value - 8) } });
+    const debito = await accountsModel.findOneAndUpdate({ _id: agencyDestiny[0]._id }, { $inc: { balance: value } });
+    bacon.push(credito);
+    bacon.push(debito);
+    return bacon;
+
+}
+
 async function mediaSaldo(agencia) {
     const balanceByAgency = await accountsModel.find({ agencia: agencia })
     const balanceList = [];
     balanceByAgency.forEach(balance => {
         balanceList.push(balance.balance);
     });
-    const sum = balanceList.reduce((accumulator,current ) => {
+    const sum = balanceList.reduce((accumulator, current) => {
         return current + accumulator;
     }, 0);
     const media = sum / balanceList.length;
     return media.toFixed(2);
 }
-async function menorSaldo(numClientes) { 
-    const menor = await accountsModel.find({}, {name: 0}).limit(Number(numClientes)).sort({balance:1});
+
+async function menorSaldo(numClientes) {
+    const menor = await accountsModel.find({}, { name: 0 }).limit(Number(numClientes)).sort({ balance: 1 });
     return menor;
 }
+
 async function maiorSaldo(numClientes) {
-    const maior = await accountsModel.find({}, {name: 0}).limit(Number(numClientes)).sort({balance:-1});
+    const maior = await accountsModel.find({}).limit(Number(numClientes)).sort({ balance: -1, name: 1 });
     return maior;
- }
-async function agenciaPrivate(account) { }
+}
+
+async function agenciaPrivate() {
+    const accounts = await accountsModel.find({});
+    const agencies = await accountsModel.distinct("agencia");
+
+    let listaMaiores = [];
+    agencies.forEach(agencie => {
+        let maioresBalances = 0;
+        let maiores = [];
+        accounts.forEach(account => {
+            if (account.balance > maioresBalances && account.agencia === agencie) {
+                maioresBalances = account.balance;
+                maiores = account;
+            }
+        });
+        listaMaiores.push(maiores);
+    });
+    listaMaiores.forEach(async (item) => {
+        await accountsModel.findOneAndUpdate({ _id: item._id }, { agencia: 99 }, { new: true });
+    });
+    const privateAgency = await accountsModel.find({ agencia: 99 });
+    return privateAgency;
+}
 
 export { getAll, deposito, saque, consultarSaldo, deleteAccount, transferencia, mediaSaldo, menorSaldo, maiorSaldo, agenciaPrivate }
