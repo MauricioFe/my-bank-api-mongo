@@ -50,8 +50,22 @@ router.get('/mediaSaldo/:agencia', async (req, res) => {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.get('/menorSaldo/:numClientes', async (req, res) => { });
-router.get('/maiorSaldo/:numClientes', async (req, res) => { });
+router.get('/menorSaldo/:numClientes', async (req, res) => { 
+    let {numClientes} = req.params;
+    try {
+        res.send(await menorSaldo(numClientes))
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+});
+router.get('/maiorSaldo/:numClientes', async (req, res) => { 
+    let {numClientes} = req.params;
+    try {
+        res.send(await maiorSaldo(numClientes))
+    } catch (error) {
+        res.status(500).send("Erro na requisição " + error);
+    }
+});
 router.put('/agenciaPrivate', async (req, res) => { });
 
 

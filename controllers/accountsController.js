@@ -54,11 +54,16 @@ async function mediaSaldo(agencia) {
         return current + accumulator;
     }, 0);
     const media = sum / balanceList.length;
-    console.log(media.toFixed(2))
     return media.toFixed(2);
 }
-async function menorSaldo(numClientes) { }
-async function maiorSaldo(numClientes) { }
+async function menorSaldo(numClientes) { 
+    const menor = await accountsModel.find({}, {name: 0}).limit(Number(numClientes)).sort({balance:1});
+    return menor;
+}
+async function maiorSaldo(numClientes) {
+    const maior = await accountsModel.find({}, {name: 0}).limit(Number(numClientes)).sort({balance:-1});
+    return maior;
+ }
 async function agenciaPrivate(account) { }
 
 export { getAll, deposito, saque, consultarSaldo, deleteAccount, transferencia, mediaSaldo, menorSaldo, maiorSaldo, agenciaPrivate }
