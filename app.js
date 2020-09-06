@@ -1,20 +1,21 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import router from './routes/accountsRouter.js'
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
 app.use('/accounts', router);
 
-app.listen(3000, async () => {
+app.listen(process.env.PORT, async () => {
     try {
         console.log("API Started");
     } catch (error) {
         console.log(error)
     }
 });
-mongoose.connect('mongodb+srv://Mauricio:7468@bootcamp.ijmxh.mongodb.net/MyBank?retryWrites=true&w=majority', {
+mongoose.connect(`mongodb+srv://${process.env.USERDB}:${process.env.PWD}@bootcamp.ijmxh.mongodb.net/MyBank?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(
