@@ -83,9 +83,7 @@ router.patch('/agenciaPrivate', async (req, res) => {
         res.status(500).send("Erro na requisição " + error);
     }
 });
-router.get('/bacon', (req, res) =>{
-    res.send('bacon');
-})
+
 
 
 export default router;
